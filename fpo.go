@@ -15,7 +15,7 @@ type ImageHandler struct{}
 
 var (
 	dimensions_regex, err = regexp.Compile(`/([0-9]+)x([0-9]+)$`)
-	gray = color.RGBA{200, 200, 200, 255}
+	gray = color.RGBA{240, 240, 240, 255}
 	canvas = &image.Uniform{gray}
 )
 
