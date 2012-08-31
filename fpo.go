@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 	"image"
 	"image/draw"
@@ -21,6 +21,10 @@ var (
 )
 
 func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		canvas.C = gray
+	}()
+
 	// fmt.Printf("request path: %v \n", r.URL.Path)
 
 	options := request_regex.FindAllStringSubmatch(r.URL.Path, -1)
@@ -35,7 +39,7 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	width, err := strconv.Atoi(options[0][2])
 	colorhex := options[0][3]
 
-	fmt.Printf("image request: %v, %v, %v\n", height, width, colorhex)
+	// fmt.Printf("image request: %v, %v, %v\n", height, width, colorhex)
 
 	// fmt.Printf("length: %d\n", len(colorhex))
 
@@ -57,7 +61,6 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         w.Header().Set("Cache-control", "public, max-age=259200")
 
 	png.Encode(w, m)
-	canvas.C = gray
 }
 
 func get_colors(colorhex string) (byte, byte, byte) {
