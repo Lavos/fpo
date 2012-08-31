@@ -15,7 +15,7 @@ import (
 type ImageHandler struct{}
 
 var (
-	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)/*([0-9a-f]{6}){0,1}`)
+	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(/([0-9a-f]{6})){0,1}`)
 	gray = color.RGBA{240, 240, 240, 255}
 	canvas = &image.Uniform{gray}
 )
@@ -28,6 +28,7 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// fmt.Printf("request path: %v \n", r.URL.Path)
 
 	options := request_regex.FindAllStringSubmatch(r.URL.Path, -1)
+	// fmt.Printf("%v\n", options)
 
 	if options == nil {
 		// fmt.Print("options is nil, aborting.\n")
@@ -37,7 +38,7 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	height, err := strconv.Atoi(options[0][1])
 	width, err := strconv.Atoi(options[0][2])
-	colorhex := options[0][3]
+	colorhex := options[0][4]
 
 	// fmt.Printf("image request: %v, %v, %v\n", height, width, colorhex)
 
