@@ -25,13 +25,9 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		canvas.C = gray
 	}()
 
-	// fmt.Printf("request path: %v \n", r.URL.Path)
-
 	options := request_regex.FindAllStringSubmatch(r.URL.Path, -1)
-	// fmt.Printf("%v\n", options)
 
 	if options == nil {
-		// fmt.Print("options is nil, aborting.\n")
 		http.Error(w, "", 400)
 		return
 	}
@@ -40,13 +36,8 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	width, err := strconv.Atoi(options[0][2])
 	colorhex := options[0][4]
 
-	// fmt.Printf("image request: %v, %v, %v\n", height, width, colorhex)
-
-	// fmt.Printf("length: %d\n", len(colorhex))
-
 	if len(colorhex) > 0 {
 		red, green, blue := get_colors(colorhex)
-		// fmt.Printf("%v, %v, %v\n", red, green, blue)
 		canvas.C = color.RGBA{red, green, blue, 255}
 	}
 
