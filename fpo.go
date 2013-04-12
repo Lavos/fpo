@@ -2,23 +2,23 @@ package main
 
 import (
 	// "fmt"
-	"net/http"
+	"encoding/hex"
 	"image"
-	"image/draw"
 	"image/color"
+	"image/draw"
 	"image/png"
+	"math/rand"
+	"net/http"
 	"regexp"
 	"strconv"
-	"encoding/hex"
-	"math/rand"
 )
 
 type ImageHandler struct{}
 
 var (
 	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(?:/([0-9a-f]{6}|random)?)`)
-	gray = color.RGBA{240, 240, 240, 255}
-	canvas = &image.Uniform{gray}
+	gray             = color.RGBA{240, 240, 240, 255}
+	canvas           = &image.Uniform{gray}
 )
 
 func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +38,7 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	colorhex := options[0][3]
 
 	if len(colorhex) == 0 {
-		canvas.C = gray;
+		canvas.C = gray
 	} else if colorhex == "random" {
 		canvas.C = color.RGBA{uint8(rand.Intn(256)), uint8(rand.Intn(256)), uint8(rand.Intn(256)), 255}
 	} else {
@@ -54,8 +54,8 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	m := image.NewRGBA(image.Rect(0, 0, height, width))
 	draw.Draw(m, m.Bounds(), canvas, image.ZP, draw.Src)
 
-        w.Header().Set("Content-type", "image/png")
-        w.Header().Set("Cache-control", "public, max-age=259200")
+	w.Header().Set("Content-type", "image/png")
+	w.Header().Set("Cache-control", "public, max-age=259200")
 
 	png.Encode(w, m)
 }
