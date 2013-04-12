@@ -10,12 +10,13 @@ import (
 	"regexp"
 	"strconv"
 	"encoding/hex"
+	"math/rand"
 )
 
 type ImageHandler struct{}
 
 var (
-	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(/([0-9a-f]{6})){0,1}`)
+	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(?:/([0-9a-f]{6}|random)?)`)
 	gray = color.RGBA{240, 240, 240, 255}
 	canvas = &image.Uniform{gray}
 )
@@ -34,9 +35,13 @@ func (h ImageHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	height, err := strconv.Atoi(options[0][1])
 	width, err := strconv.Atoi(options[0][2])
-	colorhex := options[0][4]
+	colorhex := options[0][3]
 
-	if len(colorhex) > 0 {
+	if len(colorhex) == 0 {
+		canvas.C = gray;
+	} else if colorhex == "random" {
+		canvas.C = color.RGBA{uint8(rand.Intn(256)), uint8(rand.Intn(256)), uint8(rand.Intn(256)), 255}
+	} else {
 		red, green, blue := get_colors(colorhex)
 		canvas.C = color.RGBA{red, green, blue, 255}
 	}
