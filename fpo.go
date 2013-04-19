@@ -16,7 +16,7 @@ import (
 type ImageHandler struct{}
 
 var (
-	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(?:/([0-9a-f]{6}|random)?)`)
+	request_regex, _ = regexp.Compile(`/([0-9]+)x([0-9]+)(?:/([0-9a-f]{6}|random)?)?`)
 	gray             = color.RGBA{240, 240, 240, 255}
 	canvas           = &image.Uniform{gray}
 )
